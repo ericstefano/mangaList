@@ -7,8 +7,6 @@ const Search = ({
   iconLeft,
   iconButton,
   inputPlaceholder,
-  inputOnChange,
-  inputValue,
   variants,
   onSubmit,
 }) => {
@@ -20,8 +18,6 @@ const Search = ({
           <Input
             placeholder={inputPlaceholder}
             variants={variants.trimEnd()}
-            onChange={inputOnChange}
-            value={inputValue}
             type="search"
           />
           <span className="icon is-small is-left">{iconLeft}</span>

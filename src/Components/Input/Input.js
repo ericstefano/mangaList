@@ -9,6 +9,7 @@ const Input = ({ type, value, placeholder, variants, style, onChange }) => {
       className={`input ${variants}`.trimEnd()}
       style={style}
       onChange={onChange}
+      name="pesquisa"
     ></input>
   );
 };

@@ -10,9 +10,18 @@ const ElementCard = ({ content, src, alt, badges }) => {
   const renderBadges = () => {
     return (
       <div className="badges my-1">
-        {badges.map((badge) => {
-          return <Tag variants="is-info" content={badge}></Tag>;
-        })}
+        <Tag
+          variants="is-info"
+          content={badges.score === 0 ? 'n/a' : badges.score}
+        ></Tag>
+        <Tag
+          variants="is-info"
+          content={new Date(badges.start_date).getFullYear()}
+        ></Tag>
+        <Tag
+          variants="is-info"
+          content={badges.members.toLocaleString('pt-BR')}
+        ></Tag>
       </div>
     );
   };

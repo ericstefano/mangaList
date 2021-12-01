@@ -1,49 +1,40 @@
 import './bulma.min.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useMangas from '../../Hooks/useMangas';
 import { FaBook, FaSearch } from 'react-icons/fa';
 import Search from '../Search/Search';
 import Loading from '../Loading/Loading';
 import ElementCard from '../ElementCard/ElementCard';
 import CardContainer from '../CardContainer/CardContainer';
-
-const useMangas = (query) => {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    if (query === '') return;
-    const fetchMangas = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(
-          `https://api.jikan.moe/v3/search/manga?q=${encodeURI(
-            query
-          )}&order_by=members&sort=desc&genre=9,12&genre_exclude=1,1&limit=20`,
-          { signal: abortController.signal }
-        );
-        const json = await res.json();
-        setResults(await json.results);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMangas();
-    return () => {
-      abortController.abort();
-      setLoading(false);
-    };
-  }, [query]);
-  return [results, loading, error];
-};
+import MessageParagraph from '../MessageParagraph/MessageParagraph';
 
 function App() {
-  const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
   const [results, loading, error] = useMangas(query);
+
+  const message = () => {
+    if (error === undefined) {
+      return (
+        <MessageParagraph
+          value={'Os resultados da sua pesquisa aparecerão aqui'}
+        />
+      );
+    } else if (error === '404') {
+      return (
+        <MessageParagraph
+          value={`Nenhum resultado encontrado para "${query}"`}
+        />
+      );
+    } else {
+      return (
+        <MessageParagraph
+          value={
+            'Erro na pesquisa! Por favor, verifique sua conexão e tente novamente.'
+          }
+        />
+      );
+    }
+  };
 
   return (
     <div className="App">
@@ -57,25 +48,20 @@ function App() {
                 iconButton={FaSearch()}
                 onSubmit={(e) => {
                   e.preventDefault();
-                  setQuery(search);
-                  setSearch('');
+                  const formData = new FormData(e.target);
+                  const pesquisa = formData.get('pesquisa');
+                  if (pesquisa === '') return;
+                  setQuery(formData.get('pesquisa'));
                 }}
-                inputValue={search}
-                inputOnChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            {results && results.length === 0 && !loading ? (
-              <div className="has-text-centered	">
-                <p className="m-0 is-italic is-size-6 has-text-weight-light">
-                  Os resultados da sua pesquisa aparecerão aqui
-                </p>
-              </div>
-            ) : (
-              ''
+            {results && results.length === 0 && !loading && (
+              <div className="has-text-centered	">{message()}</div>
             )}
             {loading && <Loading />}
             <CardContainer>
               {results &&
+                results.length > 0 &&
                 results.map((manga) => {
                   return (
                     <ElementCard
@@ -83,11 +69,11 @@ function App() {
                       src={manga.image_url}
                       alt={manga.title}
                       key={manga.mal_id}
-                      badges={[
-                        `Nota: ${manga.score === 0 ? 'n/a' : manga.score}`,
-                        `Ano: ${new Date(manga.start_date).getFullYear()}`,
-                        `Membros: ${manga.members.toLocaleString('pt-BR')}`,
-                      ]}
+                      badges={{
+                        score: manga.score,
+                        start_date: manga.start_date,
+                        members: manga.members,
+                      }}
                     />
                   );
                 })}
