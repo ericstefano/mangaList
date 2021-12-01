@@ -1,8 +1,8 @@
-import './Tag.css';
+import './Badge.css';
 
-const Tag = ({ content, variants }) => {
+const Badge = ({ content, variants }) => {
   variants = variants ? variants : '';
   return <div className={`tag h-0  ${variants}`}>{content}</div>;
 };
 
-export default Tag;
+export default Badge;

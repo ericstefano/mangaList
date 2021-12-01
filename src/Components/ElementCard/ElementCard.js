@@ -1,7 +1,7 @@
 import './ElementCard.css';
 import useToggle from '../../Hooks/useToggle';
 import { FaPlus } from 'react-icons/fa';
-import Tag from '../Tag/Tag';
+import Badge from '../Badge/Badge';
 import Button from '../Button/Button';
 
 const ElementCard = ({ content, src, alt, badges }) => {
@@ -10,18 +10,18 @@ const ElementCard = ({ content, src, alt, badges }) => {
   const renderBadges = () => {
     return (
       <div className="badges my-1">
-        <Tag
+        <Badge
           variants="is-info"
-          content={badges.score === 0 ? 'n/a' : badges.score}
-        ></Tag>
-        <Tag
+          content={`Nota: ${badges.score === 0 ? 'n/a' : badges.score}`}
+        />
+        <Badge
           variants="is-info"
-          content={new Date(badges.start_date).getFullYear()}
-        ></Tag>
-        <Tag
+          content={`Ano: ${new Date(badges.start_date).getFullYear()}`}
+        />
+        <Badge
           variants="is-info"
-          content={badges.members.toLocaleString('pt-BR')}
-        ></Tag>
+          content={`Membros: ${badges.members.toLocaleString('pt-BR')}`}
+        />
       </div>
     );
   };
