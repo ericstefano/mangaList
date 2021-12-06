@@ -18,6 +18,20 @@ const fetchPostJsonServer = async (body) => {
   if (!res.ok) {
     throw new Error(res.status);
   }
+  return res;
+};
+
+const fetchDeleteJsonServer = async (manga) => {
+  const res = await fetch(
+    `http://localhost:8000/favorites/${encodeURIComponent(manga.mal_id)}`,
+    {
+      method: 'DELETE',
+    }
+  );
+  if (!res.ok) {
+    throw new Error(res.status);
+  }
+  return res;
 };
 
 const fetchJikanApi = async (query, abortController) => {
@@ -34,4 +48,9 @@ const fetchJikanApi = async (query, abortController) => {
   return await json.results;
 };
 
-export { fetchGetJsonServer, fetchPostJsonServer, fetchJikanApi };
+export {
+  fetchGetJsonServer,
+  fetchPostJsonServer,
+  fetchDeleteJsonServer,
+  fetchJikanApi,
+};

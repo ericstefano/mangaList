@@ -1,9 +1,14 @@
 import './bulma.min.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useMangas } from '../../Hooks';
-import { FaBook, FaSearch } from 'react-icons/fa';
+import { FaBook, FaPlus, FaTimes } from 'react-icons/fa';
 import { Box, Block, Container } from '../Bulma';
-import { fetchPostJsonServer } from '../../Utils/API';
+import {
+  fetchPostJsonServer,
+  fetchGetJsonServer,
+  fetchDeleteJsonServer,
+} from '../../Utils/API';
+import { SearchContext } from '../../Contexts/SearchContext';
 import Search from '../Search';
 import Loading from '../Loading';
 import Card from '../Card';
@@ -14,8 +19,22 @@ function App() {
   const [query, setQuery] = useState('');
   const [results, loading, error, setResults] = useMangas(query);
   const inputRef = useRef(null);
+  const [myList, setMyList] = useState([]);
 
-  const addToList = async (e) => {
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetchGetJsonServer();
+        setMyList(res);
+      } catch (e) {}
+    })();
+
+    return () => {
+      setMyList([]);
+    };
+  }, [results]);
+
+  const addToList = (e) => {
     setResults(
       results.filter((manga) => {
         return manga.mal_id !== e.mal_id;
@@ -34,6 +53,18 @@ function App() {
     try {
       fetchPostJsonServer(favorite);
     } catch (e) {}
+  };
+
+  const removeFromList = (e) => {
+    setMyList(
+      myList.filter((manga) => {
+        return manga.mal_id !== e.mal_id;
+      })
+    );
+    // setResults((results) => {
+    //   return [e, ...results];
+    // });
+    fetchDeleteJsonServer(e);
   };
 
   const handleMessage = () => {
@@ -59,50 +90,65 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <div className="m-3">
-          <Box>
-            <Block variants="mb-4">
+        <Box variants="m-3">
+          <Block variants="mb-4">
+            <SearchContext.Provider value={{ inputRef, setQuery }}>
               <Search
                 inputPlaceholder="Pesquise um mangá"
                 iconLeft={FaBook()}
-                iconButton={FaSearch()}
-                inputRef={inputRef}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.target);
-                  const pesquisa = formData.get('pesquisa');
-                  if (pesquisa === '') return;
-                  setQuery(formData.get('pesquisa'));
-                  inputRef.current.value = '';
-                }}
               />
-            </Block>
-            {results && results.length === 0 && !loading && (
-              <div className="has-text-centered">{handleMessage()}</div>
-            )}
-            {loading && <Loading />}
-            <CardGrid>
-              {results &&
-                results.length > 0 &&
-                results.map((manga) => {
-                  return (
-                    <Card
-                      content={manga.title}
-                      src={manga.image_url}
-                      alt={manga.title}
-                      key={manga.mal_id}
-                      badges={{
-                        score: manga.score,
-                        start_date: manga.start_date,
-                        members: manga.members,
-                      }}
-                      buttonOnClick={() => addToList(manga)}
-                    />
-                  );
-                })}
-            </CardGrid>
-          </Box>
-        </div>
+            </SearchContext.Provider>
+          </Block>
+          {results && results.length === 0 && !loading && (
+            <div className="has-text-centered">{handleMessage()}</div>
+          )}
+          {loading && <Loading />}
+          <CardGrid>
+            {results &&
+              results.length > 0 &&
+              results.map((manga) => {
+                return (
+                  <Card
+                    content={manga.title}
+                    src={manga.image_url}
+                    alt={manga.title}
+                    key={manga.mal_id}
+                    buttonIcon={FaPlus()}
+                    badges={{
+                      score: manga.score,
+                      start_date: manga.start_date,
+                      members: manga.members,
+                    }}
+                    buttonOnClick={() => addToList(manga)}
+                  />
+                );
+              })}
+          </CardGrid>
+        </Box>
+        <Box variants="m-3">
+          <CardGrid>
+            {myList &&
+              myList.length > 0 &&
+              myList.map((manga) => {
+                return (
+                  <Card
+                    content={manga.title}
+                    src={manga.image_url}
+                    alt={manga.title}
+                    key={manga.mal_id}
+                    buttonIcon={FaTimes()}
+                    variants={'is-danger'}
+                    badges={{
+                      score: manga.score,
+                      start_date: manga.start_date,
+                      members: manga.members,
+                    }}
+                    buttonOnClick={() => removeFromList(manga)}
+                  />
+                );
+              })}
+          </CardGrid>
+        </Box>
       </Container>
     </div>
   );

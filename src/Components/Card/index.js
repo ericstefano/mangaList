@@ -1,25 +1,32 @@
 import './style.css';
 import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
 import { Badge } from '../Bulma';
 import { Button } from '../Bulma';
 
-const ElementCard = ({ content, src, alt, badges, buttonOnClick }) => {
+const ElementCard = ({
+  content,
+  src,
+  variants = 'is-info',
+  buttonIcon,
+  alt,
+  badges,
+  buttonOnClick,
+}) => {
   const [isHovering, setHovering] = useState(false);
 
   const renderBadges = () => {
     return (
       <div className="badges my-1">
         <Badge
-          variants="is-info"
+          variants={variants}
           content={`Nota: ${badges.score === 0 ? 'n/a' : badges.score}`}
         />
         <Badge
-          variants="is-info"
+          variants={variants}
           content={`Ano: ${new Date(badges.start_date).getFullYear()}`}
         />
         <Badge
-          variants="is-info"
+          variants={variants}
           content={`Membros: ${badges.members.toLocaleString('pt-BR')}`}
         />
       </div>
@@ -30,8 +37,8 @@ const ElementCard = ({ content, src, alt, badges, buttonOnClick }) => {
     return (
       <div className="is-flex mb-auto ml-auto">
         <Button
-          variants="is-info p-3 is-size-6 no-border-radius"
-          content={FaPlus()}
+          variants={`p-3 is-size-6 no-border-radius ${variants}`}
+          content={buttonIcon}
           onClick={buttonOnClick}
         />
       </div>

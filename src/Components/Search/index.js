@@ -1,28 +1,41 @@
 import { Button, Control, Field, Input } from '../Bulma/';
+import { SearchContext } from '../../Contexts/SearchContext';
+import { useContext } from 'react';
+import { FaSearch } from 'react-icons/fa';
 
 const Search = ({
   iconLeft,
-  iconButton,
   inputPlaceholder,
   variants = '',
-  onSubmit,
-  inputRef,
+  name = 'search',
 }) => {
+  const { inputRef, setQuery } = useContext(SearchContext);
   return (
-    <form onSubmit={onSubmit}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const pesquisa = formData.get(name);
+        if (pesquisa === '') return;
+        setQuery(formData.get(name));
+        inputRef.current.value = '';
+      }}
+    >
       <Field variants="has-addons">
-        <Control variants="has-icons-left is-expanded">
+        <Control variants={`${iconLeft && 'has-icons-left'} is-expanded`}>
           <Input
             placeholder={inputPlaceholder}
             variants={variants}
             type="search"
-            name="pesquisa"
+            name={name}
             inputRef={inputRef}
           />
-          <span className="icon is-small is-left">{iconLeft}</span>
+          {iconLeft && (
+            <span className="icon is-small is-left">{iconLeft}</span>
+          )}
         </Control>
         <Control>
-          <Button content={iconButton} type="submit" variants={variants} />
+          <Button content={FaSearch()} type="submit" variants={variants} />
         </Control>
       </Field>
     </form>
