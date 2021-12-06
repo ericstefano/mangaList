@@ -49,10 +49,10 @@ const ElementCard = ({
     <div
       className="card-container"
       onMouseEnter={() => {
-        setHovering((state) => !state);
+        setHovering(true);
       }}
       onMouseLeave={() => {
-        setHovering((state) => !state);
+        setHovering(false);
       }}
     >
       <img src={src} className="img" alt={alt} />

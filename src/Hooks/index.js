@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchGetJsonServer, fetchJikanApi } from '../Utils/API';
-const useMangas = (query = '') => {
+
+const useJikan = (query = '') => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
@@ -19,9 +20,7 @@ const useMangas = (query = '') => {
               !resultsServer.find(({ mal_id }) => manga.mal_id === mal_id)
           );
           setResults(final);
-        } catch (e) {
-          setResults(resultsJikan);
-        }
+        } catch (e) {}
       } catch (e) {
         setError(e.message);
       } finally {
@@ -38,4 +37,4 @@ const useMangas = (query = '') => {
   return [results, loading, error, setResults];
 };
 
-export { useMangas };
+export { useJikan };

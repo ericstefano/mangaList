@@ -1,6 +1,6 @@
 import './bulma.min.css';
 import { useState, useRef, useEffect } from 'react';
-import { useMangas } from '../../Hooks';
+import { useJikan } from '../../Hooks';
 import { FaBook, FaPlus, FaTimes } from 'react-icons/fa';
 import { Box, Block, Container } from '../Bulma';
 import {
@@ -14,10 +14,11 @@ import Loading from '../Loading';
 import Card from '../Card';
 import CardGrid from '../CardGrid';
 import Message from '../Message';
+import { LayoutGrid } from '../LayoutGrid';
 
 function App() {
   const [query, setQuery] = useState('');
-  const [results, loading, error, setResults] = useMangas(query);
+  const [results, loading, error, setResults] = useJikan(query);
   const inputRef = useRef(null);
   const [myList, setMyList] = useState([]);
 
@@ -61,9 +62,6 @@ function App() {
         return manga.mal_id !== e.mal_id;
       })
     );
-    // setResults((results) => {
-    //   return [e, ...results];
-    // });
     fetchDeleteJsonServer(e);
   };
 
@@ -89,66 +87,86 @@ function App() {
 
   return (
     <div className="App">
+      <h1 className="is-size-1 has-text-centered has-text-weight-bold mt-4">
+        Mangáリスト
+      </h1>
+      <p className="has-text-centered is-size-5 px-3">
+        Pesquise um mangá e clique no botão para salvar na sua lista.
+      </p>
       <Container>
-        <Box variants="m-3">
-          <Block variants="mb-4">
-            <SearchContext.Provider value={{ inputRef, setQuery }}>
-              <Search
-                inputPlaceholder="Pesquise um mangá"
-                iconLeft={FaBook()}
+        <LayoutGrid>
+          <Box variants="m-3">
+            <Block variants="mb-4">
+              <SearchContext.Provider value={{ inputRef, setQuery }}>
+                <Search
+                  inputPlaceholder="Pesquise um mangá"
+                  iconLeft={FaBook()}
+                />
+              </SearchContext.Provider>
+            </Block>
+            {results && results.length === 0 && !loading && handleMessage()}
+            {loading && <Loading />}
+            <CardGrid>
+              {results &&
+                results.length > 0 &&
+                results.map((manga) => {
+                  return (
+                    <Card
+                      content={manga.title}
+                      src={manga.image_url}
+                      alt={manga.title}
+                      key={manga.mal_id}
+                      buttonIcon={FaPlus()}
+                      badges={{
+                        score: manga.score,
+                        start_date: manga.start_date,
+                        members: manga.members,
+                      }}
+                      buttonOnClick={() => addToList(manga)}
+                    />
+                  );
+                })}
+            </CardGrid>
+          </Box>
+          <Box variants="m-3 p-0">
+            <h2
+              className="is-size-5 has-text-centered has-text-grey py-2"
+              style={{
+                borderBottom: '0.5px solid #dbdbdb',
+              }}
+            >
+              Minha Lista de Mangás
+            </h2>
+            {myList && myList.length === 0 && (
+              <Message
+                message={'Os seus mangás favoritos ficarão aqui'}
+                variants="p-125"
               />
-            </SearchContext.Provider>
-          </Block>
-          {results && results.length === 0 && !loading && (
-            <div className="has-text-centered">{handleMessage()}</div>
-          )}
-          {loading && <Loading />}
-          <CardGrid>
-            {results &&
-              results.length > 0 &&
-              results.map((manga) => {
-                return (
-                  <Card
-                    content={manga.title}
-                    src={manga.image_url}
-                    alt={manga.title}
-                    key={manga.mal_id}
-                    buttonIcon={FaPlus()}
-                    badges={{
-                      score: manga.score,
-                      start_date: manga.start_date,
-                      members: manga.members,
-                    }}
-                    buttonOnClick={() => addToList(manga)}
-                  />
-                );
-              })}
-          </CardGrid>
-        </Box>
-        <Box variants="m-3">
-          <CardGrid>
-            {myList &&
-              myList.length > 0 &&
-              myList.map((manga) => {
-                return (
-                  <Card
-                    content={manga.title}
-                    src={manga.image_url}
-                    alt={manga.title}
-                    key={manga.mal_id}
-                    buttonIcon={FaTimes()}
-                    variants={'is-danger'}
-                    badges={{
-                      score: manga.score,
-                      start_date: manga.start_date,
-                      members: manga.members,
-                    }}
-                    buttonOnClick={() => removeFromList(manga)}
-                  />
-                );
-              })}
-          </CardGrid>
-        </Box>
+            )}
+            {myList && myList.length > 0 && (
+              <CardGrid variants="p-125">
+                {myList.map((manga) => {
+                  return (
+                    <Card
+                      content={manga.title}
+                      src={manga.image_url}
+                      alt={manga.title}
+                      key={manga.mal_id}
+                      buttonIcon={FaTimes()}
+                      variants={'is-danger'}
+                      badges={{
+                        score: manga.score,
+                        start_date: manga.start_date,
+                        members: manga.members,
+                      }}
+                      buttonOnClick={() => removeFromList(manga)}
+                    />
+                  );
+                })}
+              </CardGrid>
+            )}
+          </Box>
+        </LayoutGrid>
       </Container>
     </div>
   );
