@@ -1,35 +1,55 @@
 import './bulma.min.css';
-import { useState } from 'react';
-import useMangas from '../../Hooks/useMangas';
+import { useState, useRef } from 'react';
+import { useMangas } from '../../Hooks';
 import { FaBook, FaSearch } from 'react-icons/fa';
-import Search from '../Search/Search';
-import Loading from '../Loading/Loading';
-import ElementCard from '../ElementCard/ElementCard';
-import CardContainer from '../CardContainer/CardContainer';
-import MessageParagraph from '../MessageParagraph/MessageParagraph';
+import { Box, Block, Container } from '../Bulma';
+import { fetchPostJsonServer } from '../../Utils/API';
+import Search from '../Search';
+import Loading from '../Loading';
+import Card from '../Card';
+import CardGrid from '../CardGrid';
+import Message from '../Message';
 
 function App() {
   const [query, setQuery] = useState('');
-  const [results, loading, error] = useMangas(query);
+  const [results, loading, error, setResults] = useMangas(query);
+  const inputRef = useRef(null);
 
-  const message = () => {
+  const addToList = async (e) => {
+    setResults(
+      results.filter((manga) => {
+        return manga.mal_id !== e.mal_id;
+      })
+    );
+
+    const favorite = {
+      mal_id: e.mal_id,
+      image_url: e.image_url,
+      title: e.title,
+      score: e.score,
+      start_date: e.start_date,
+      members: e.members,
+    };
+
+    try {
+      fetchPostJsonServer(favorite);
+    } catch (e) {}
+  };
+
+  const handleMessage = () => {
     if (error === undefined) {
       return (
-        <MessageParagraph
-          value={'Os resultados da sua pesquisa aparecerão aqui'}
-        />
+        <Message message={'Os resultados da sua pesquisa aparecerão aqui'} />
       );
     } else if (error === '404') {
       return (
-        <MessageParagraph
-          value={`Nenhum resultado encontrado para "${query}"`}
-        />
+        <Message message={`Nenhum resultado encontrado para "${query}"`} />
       );
     } else {
       return (
-        <MessageParagraph
-          value={
-            'Erro na pesquisa! Por favor, verifique sua conexão e tente novamente.'
+        <Message
+          message={
+            'Erro na pesquisa! Por favor verifique sua conexão e tente novamente.'
           }
         />
       );
@@ -38,33 +58,35 @@ function App() {
 
   return (
     <div className="App">
-      <div className="container">
+      <Container>
         <div className="m-3">
-          <div className="box">
-            <div className="block mb-4">
+          <Box>
+            <Block variants="mb-4">
               <Search
                 inputPlaceholder="Pesquise um mangá"
                 iconLeft={FaBook()}
                 iconButton={FaSearch()}
+                inputRef={inputRef}
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target);
                   const pesquisa = formData.get('pesquisa');
                   if (pesquisa === '') return;
                   setQuery(formData.get('pesquisa'));
+                  inputRef.current.value = '';
                 }}
               />
-            </div>
+            </Block>
             {results && results.length === 0 && !loading && (
-              <div className="has-text-centered	">{message()}</div>
+              <div className="has-text-centered">{handleMessage()}</div>
             )}
             {loading && <Loading />}
-            <CardContainer>
+            <CardGrid>
               {results &&
                 results.length > 0 &&
                 results.map((manga) => {
                   return (
-                    <ElementCard
+                    <Card
                       content={manga.title}
                       src={manga.image_url}
                       alt={manga.title}
@@ -74,14 +96,14 @@ function App() {
                         start_date: manga.start_date,
                         members: manga.members,
                       }}
+                      buttonOnClick={() => addToList(manga)}
                     />
                   );
                 })}
-            </CardContainer>
-          </div>
-          <div className="box"></div>
+            </CardGrid>
+          </Box>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

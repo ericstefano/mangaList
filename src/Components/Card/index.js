@@ -1,11 +1,11 @@
-import './ElementCard.css';
-import useToggle from '../../Hooks/useToggle';
+import './style.css';
+import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import Badge from '../Badge/Badge';
-import Button from '../Button/Button';
+import { Badge } from '../Bulma';
+import { Button } from '../Bulma';
 
-const ElementCard = ({ content, src, alt, badges }) => {
-  const [isHovering, setHovering] = useToggle();
+const ElementCard = ({ content, src, alt, badges, buttonOnClick }) => {
+  const [isHovering, setHovering] = useState(false);
 
   const renderBadges = () => {
     return (
@@ -28,8 +28,12 @@ const ElementCard = ({ content, src, alt, badges }) => {
 
   const renderButton = () => {
     return (
-      <div className="is-flex  mb-auto ml-auto">
-        <Button variants="is-info p-3 is-size-6" content={FaPlus()} />
+      <div className="is-flex mb-auto ml-auto">
+        <Button
+          variants="is-info p-3 is-size-6 no-border-radius"
+          content={FaPlus()}
+          onClick={buttonOnClick}
+        />
       </div>
     );
   };
@@ -38,10 +42,10 @@ const ElementCard = ({ content, src, alt, badges }) => {
     <div
       className="card-container"
       onMouseEnter={() => {
-        setHovering();
+        setHovering((state) => !state);
       }}
       onMouseLeave={() => {
-        setHovering();
+        setHovering((state) => !state);
       }}
     >
       <img src={src} className="img" alt={alt} />

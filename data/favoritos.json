@@ -1,0 +1,36 @@
+{
+  "favorites": [
+    {
+      "mal_id": 13,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/55539.jpg?s=b4d9e935b7152f0c9e69b34a7797fe02",
+      "title": "One Piece",
+      "score": 9.17,
+      "start_date": "1997-07-22T00:00:00+00:00",
+      "members": 439936
+    },
+    {
+      "mal_id": 103897,
+      "image_url": "https://cdn.myanimelist.net/images/manga/1/197883.jpg?s=b62f5435d61607e61e1aa67db210aa99",
+      "title": "Dr. Stone",
+      "score": 8.22,
+      "start_date": "2017-03-06T00:00:00+00:00",
+      "members": 139163
+    },
+    {
+      "mal_id": 44347,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/80661.jpg?s=3eb9cd0c329dacd00f6c318ee0f5945f",
+      "title": "One Punch-Man",
+      "score": 8.72,
+      "start_date": "2012-06-14T00:00:00+00:00",
+      "members": 352935
+    },
+    {
+      "mal_id": 110737,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/207460.jpg?s=8f4be89c9b9c650537336335b9438af3",
+      "title": "Ijiranaide, Nagatoro-san",
+      "score": 7.71,
+      "start_date": "2017-11-07T00:00:00+00:00",
+      "members": 137796
+    }
+  ]
+}
