@@ -32,9 +32,27 @@ const useJikan = (query = '') => {
       abortController.abort();
       setResults([]);
       setLoading(false);
+      setError(undefined);
     };
   }, [query]);
   return [results, loading, error, setResults];
 };
 
-export { useJikan };
+const useGetServer = () => {
+  const [mangas, setMangas] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetchGetJsonServer();
+        setMangas(res);
+      } catch (e) {}
+    })();
+
+    return () => {
+      setMangas([]);
+    };
+  }, []);
+  return [mangas, setMangas];
+};
+
+export { useJikan, useGetServer };

@@ -1,60 +1,52 @@
 import './bulma.min.css';
 import { useState, useRef, useEffect } from 'react';
-import { useJikan } from '../../Hooks';
+import { useJikan, useGetServer } from '../../Hooks';
 import { FaBook, FaPlus, FaTimes } from 'react-icons/fa';
-import { Box, Block, Container } from '../Bulma';
-import {
-  fetchPostJsonServer,
-  fetchGetJsonServer,
-  fetchDeleteJsonServer,
-} from '../../Utils/API';
+import { Box, Block, Container, Button } from '../Bulma';
+import { fetchPostJsonServer, fetchDeleteJsonServer } from '../../Utils/API';
 import { SearchContext } from '../../Contexts/SearchContext';
 import Search from '../Search';
 import Loading from '../Loading';
 import Card from '../Card';
 import CardGrid from '../CardGrid';
 import Message from '../Message';
-import { LayoutGrid } from '../LayoutGrid';
+import LayoutGrid from '../LayoutGrid';
+import Title from '../Title';
 
 function App() {
   const [query, setQuery] = useState('');
   const [results, loading, error, setResults] = useJikan(query);
   const inputRef = useRef(null);
-  const [myList, setMyList] = useState([]);
+  const [currentAdd, setCurrentAdd] = useState(null);
+  const [myList, setMyList] = useGetServer();
+
+  const add = (e) => {
+    setCurrentAdd(e);
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetchGetJsonServer();
-        setMyList(res);
-      } catch (e) {}
-    })();
-
-    return () => {
-      setMyList([]);
-    };
-  }, [results]);
-
-  const addToList = (e) => {
-    setResults(
-      results.filter((manga) => {
-        return manga.mal_id !== e.mal_id;
-      })
-    );
-
-    const favorite = {
-      mal_id: e.mal_id,
-      image_url: e.image_url,
-      title: e.title,
-      score: e.score,
-      start_date: e.start_date,
-      members: e.members,
-    };
-
-    try {
-      fetchPostJsonServer(favorite);
-    } catch (e) {}
-  };
+    if (currentAdd !== null) {
+      (async () => {
+        try {
+          const favorite = {
+            mal_id: currentAdd.mal_id,
+            image_url: currentAdd.image_url,
+            title: currentAdd.title,
+            score: currentAdd.score,
+            start_date: currentAdd.start_date,
+            members: currentAdd.members,
+          };
+          fetchPostJsonServer(favorite);
+          setResults((previous) => {
+            return previous.filter((manga) => {
+              return manga.mal_id !== favorite.mal_id;
+            });
+          });
+          setMyList((previous) => [...previous, favorite]);
+        } catch (e) {}
+      })();
+    }
+  }, [currentAdd, setResults, setMyList]);
 
   const removeFromList = (e) => {
     setMyList(
@@ -87,9 +79,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="is-size-1 has-text-centered has-text-weight-bold mt-4">
-        Mangáリスト
-      </h1>
+      <Title>Mangáリスト</Title>
       <p className="has-text-centered is-size-5 px-3">
         Pesquise um mangá e clique no botão para salvar na sua lista.
       </p>
@@ -106,6 +96,15 @@ function App() {
             </Block>
             {results && results.length === 0 && !loading && handleMessage()}
             {loading && <Loading />}
+            {results.length !== 0 && (
+              <div className="is-flex is-justify-content-center">
+                <Button
+                  content="Limpar pesquisa"
+                  variants="is-danger is-small mb-4"
+                  onClick={() => setResults([])}
+                />
+              </div>
+            )}
             <CardGrid>
               {results &&
                 results.length > 0 &&
@@ -122,7 +121,7 @@ function App() {
                         start_date: manga.start_date,
                         members: manga.members,
                       }}
-                      buttonOnClick={() => addToList(manga)}
+                      buttonOnClick={() => add(manga)}
                     />
                   );
                 })}
