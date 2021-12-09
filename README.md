@@ -10,13 +10,13 @@ Install the required packages.
 
 ### `npm test`
 
-Execute all project tests.
+Run all project tests.
 
 ### `npm run json-server`
 
 Start the local database at [http://localhost:8000](http://localhost:3000)
 
-⚠️ **IMPORTANT! Run this command before runing `npm start`** ⚠️
+⚠️ **IMPORTANT! Run this command before running `npm start`** ⚠️
 
 ### `npm start`
 
