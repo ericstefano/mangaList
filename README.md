@@ -1,12 +1,16 @@
 <h1 align="center">📖 mangaList</h1>
 
-> Simple CRUD using React - PUC Minas Level Up 2021/02 - AvenueCode UI Essentials - React Assigment Assignment
+> Simple CRUD using React - PUC Minas Level Up 2021/02 - AvenueCode UI Essentials - React Assigment
 
 ## Available Scripts
 
 ### `npm install`
 
 Install the required packages.
+
+### `npm test`
+
+Execute all project tests.
 
 ### `npm run json-server`
 
