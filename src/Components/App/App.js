@@ -101,7 +101,9 @@ function App() {
                 <Button
                   content="Limpar pesquisa"
                   variants="is-danger is-small mb-4"
-                  onClick={() => setResults([])}
+                  onClick={() => {
+                    setResults([]);
+                  }}
                 />
               </div>
             )}

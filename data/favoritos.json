@@ -1,20 +1,12 @@
 {
   "favorites": [
     {
-      "mal_id": 13,
-      "image_url": "https://cdn.myanimelist.net/images/manga/3/55539.jpg?s=b4d9e935b7152f0c9e69b34a7797fe02",
-      "title": "One Piece",
-      "score": 9.17,
-      "start_date": "1997-07-22T00:00:00+00:00",
-      "members": 440847
-    },
-    {
-      "mal_id": 44347,
-      "image_url": "https://cdn.myanimelist.net/images/manga/3/80661.jpg?s=3eb9cd0c329dacd00f6c318ee0f5945f",
-      "title": "One Punch-Man",
-      "score": 8.72,
-      "start_date": "2012-06-14T00:00:00+00:00",
-      "members": 353884
+      "mal_id": 90125,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/188896.jpg?s=107a5af07f0e6992faa286f94596f231",
+      "title": "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen",
+      "score": 8.93,
+      "start_date": "2015-05-19T00:00:00+00:00",
+      "members": 191849
     },
     {
       "mal_id": 113138,
@@ -23,6 +15,38 @@
       "score": 8.55,
       "start_date": "2018-03-05T00:00:00+00:00",
       "members": 229698
+    },
+    {
+      "mal_id": 23390,
+      "image_url": "https://cdn.myanimelist.net/images/manga/2/37846.jpg?s=bdda4d1c1d85237aead7d545f876c077",
+      "title": "Shingeki no Kyojin",
+      "score": 8.58,
+      "start_date": "2009-09-09T00:00:00+00:00",
+      "members": 534381
+    },
+    {
+      "mal_id": 119161,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/219741.jpg?s=d37eca4927a94e9d6cdb67d1013cb220",
+      "title": "Spy x Family",
+      "score": 8.59,
+      "start_date": "2019-03-25T00:00:00+00:00",
+      "members": 165842
+    },
+    {
+      "mal_id": 121496,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/222295.jpg?s=b3abea95ceaccea8adf223bd0e4047b6",
+      "title": "Solo Leveling",
+      "score": 8.83,
+      "start_date": "2018-03-04T00:00:00+00:00",
+      "members": 298623
+    },
+    {
+      "mal_id": 110737,
+      "image_url": "https://cdn.myanimelist.net/images/manga/3/207460.jpg?s=8f4be89c9b9c650537336335b9438af3",
+      "title": "Ijiranaide, Nagatoro-san",
+      "score": 7.71,
+      "start_date": "2017-11-07T00:00:00+00:00",
+      "members": 138182
     }
   ]
 }

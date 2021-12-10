@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Badge } from '../Bulma';
 import { Button } from '../Bulma';
 
-const ElementCard = ({
+const Card = ({
   content,
   src,
   variants = 'is-info',
@@ -77,4 +77,4 @@ const ElementCard = ({
   );
 };
 
-export default ElementCard;
+export default Card;
